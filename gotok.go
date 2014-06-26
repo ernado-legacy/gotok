@@ -7,6 +7,7 @@ import (
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
 	"log"
+	"net/http"
 )
 
 type Storage interface {
@@ -27,6 +28,10 @@ func Generate(id bson.ObjectId) *Token {
 type Token struct {
 	Id    bson.ObjectId `json:"id"     bson:"user,omitempty"`
 	Token string        `json:"token"  bson:"_id"`
+}
+
+func (t *Token) GetCookie() *http.Cookie {
+	return &http.Cookie{Name: "token", Value: t.Token, Path: "/"}
 }
 
 type StorageMemory struct {
